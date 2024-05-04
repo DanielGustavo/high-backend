@@ -1,0 +1,10 @@
+services:
+  server:
+    build: .
+    container_name: high_server-dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./:/high
+    ports:
+      - ${APP_PORT}:${APP_PORT}
