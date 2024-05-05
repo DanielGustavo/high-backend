@@ -5,9 +5,12 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/index.ts --ignore node_modules",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "migrate": "ts-node ./migrate.js",
+    "migrate:create": "ts-node ./migrate.js create --prefix=TIMESTAMP"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "pg": "^8.11.5",
     "ts-node": "^10.9.2",
     "umzug": "^3.8.0"

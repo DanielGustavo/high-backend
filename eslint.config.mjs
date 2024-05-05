@@ -5,6 +5,10 @@ import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
+const myRules = {
+  '@typescript-eslint/no-var-requires': 'off',
+};
+
 export default [
   // initial config
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
@@ -14,4 +18,7 @@ export default [
   // prettier config
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
+
+  // others
+  { rules: myRules },
 ];
