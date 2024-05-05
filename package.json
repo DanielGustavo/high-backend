@@ -8,10 +8,13 @@
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "ts-node": "^10.9.2"
+    "pg": "^8.11.5",
+    "ts-node": "^10.9.2",
+    "umzug": "^3.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
+    "@types/pg": "^8.11.6",
     "eslint": "^9.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

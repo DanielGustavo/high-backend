@@ -1,4 +1,14 @@
 services:
+  db:
+    image: postgres:16.2-alpine3.19
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DATABASE}
+    container_name: high_db
+
   server:
     build: .
     container_name: high_server-dev
@@ -8,3 +18,5 @@ services:
       - ./:/high
     ports:
       - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - db
