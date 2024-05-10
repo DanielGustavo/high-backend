@@ -2,22 +2,28 @@ import jsonwebtoken from 'jsonwebtoken';
 
 import { TTokenHelper } from './TTokenHelper';
 
-import tokenConfig from '../../config/token';
-
 export default class JWTHelper implements TTokenHelper {
+  constructor(secret: string, options: jsonwebtoken.SignOptions) {
+    this.secret = secret;
+    this.options = options;
+  }
+
+  private secret: string;
+  private options: jsonwebtoken.SignOptions;
+
   generateToken(data: string | object) {
-    return jsonwebtoken.sign(data, tokenConfig.secret, tokenConfig.options);
+    return jsonwebtoken.sign(data, this.secret, this.options);
   }
 
   decode<T = unknown>(token: string) {
-    return jsonwebtoken.verify(token, tokenConfig.secret) as T;
+    return jsonwebtoken.verify(token, this.secret) as T;
   }
 
   validate(token: string) {
     let isValid = true;
 
     try {
-      jsonwebtoken.verify(token, tokenConfig.secret);
+      jsonwebtoken.verify(token, this.secret);
     } catch {
       isValid = false;
     }

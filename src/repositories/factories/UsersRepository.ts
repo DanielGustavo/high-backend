@@ -1,9 +1,9 @@
 import UsersDatabaseRepository from '../../repositories/UsersRepository/UsersDatabaseRepository';
 
-import PostgresHelper from '../../helpers/DatabaseHelper/PostgresHelper';
+import { makePostgresHelper } from '../../helpers/factories/DatabaseHelper';
 
 export function makeUsersPostgresRepository() {
-  const postgresHelper = new PostgresHelper();
+  const postgresHelper = makePostgresHelper();
 
   return new UsersDatabaseRepository(postgresHelper);
 }
