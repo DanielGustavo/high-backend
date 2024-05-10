@@ -2,7 +2,11 @@ import { Request, Response } from 'express';
 
 import { makeRegisterUserUseCase } from '../usecases/factories/registerUserUseCase';
 
-import { registerValidator } from '../validators/usersValidators';
+import {
+  authenticateValidator,
+  registerValidator,
+} from '../validators/usersValidators';
+import { makeAuthenticateUserUseCase } from '../usecases/factories/authenticateUserUseCase';
 
 class UsersController {
   async register(req: Request, res: Response) {
@@ -20,6 +24,17 @@ class UsersController {
     });
 
     res.json({ ok: true });
+  }
+
+  async authenticate(req: Request, res: Response) {
+    await authenticateValidator.validate(req.body);
+
+    const authenticateUserUseCase = makeAuthenticateUserUseCase();
+
+    const { email, password } = req.body;
+    const token = await authenticateUserUseCase.execute({ email, password });
+
+    res.json({ token });
   }
 }
 
