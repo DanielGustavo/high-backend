@@ -4,6 +4,6 @@ export default interface User {
   email: string;
   password: string;
   avatarFilename?: string;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
