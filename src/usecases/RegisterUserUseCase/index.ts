@@ -1,7 +1,4 @@
-import {
-  TConstructor,
-  TUserData,
-} from './TRegisterUserUseCase';
+import { TConstructor, TUserData } from './TRegisterUserUseCase';
 
 import { TUsersRepository } from '../../repositories/UsersRepository/TUsersRepository';
 
