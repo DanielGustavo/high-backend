@@ -18,9 +18,9 @@ export default class UsersDatabaseRepository implements TUsersRepository {
         name,
         email,
         password,
-        avatar_filename as avatarFilename,
-        created_at as createdAt,
-        updated_at as updatedAt
+        avatar_filename as "avatarFilename",
+        created_at as "createdAt",
+        updated_at as "updatedAt"
       FROM users
       WHERE email = $1
       LIMIT 1
@@ -53,9 +53,9 @@ export default class UsersDatabaseRepository implements TUsersRepository {
         name,
         email,
         password,
-        avatar_filename as avatarFilename,
-        created_at as createdAt,
-        updated_at as updatedAt
+        avatar_filename as "avatarFilename",
+        created_at as "createdAt",
+        updated_at as "updatedAt"
     `;
 
     const currentTimestamp = new Date();
