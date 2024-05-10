@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 
-import AppError from '../errors/AppError';
+import AppError from '../shared/errors/AppError';
 
 export default function handleAppErrorThrowMiddleware(
   error: ErrorRequestHandler,
