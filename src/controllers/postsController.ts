@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 
 import { makeCreatePostUseCase } from '../usecases/factories/createPostUseCase';
+import { makeReadPostUseCase } from '../usecases/factories/readPostUseCase';
 
 import { makeJWTHelper } from '../helpers/factories/TokenHelper';
 
 import { TTokenPayload } from '../shared/types/TTokenPayload';
 
-import { createValidator } from '../validators/postsValidators';
+import {
+  createValidator,
+  findOneValidator,
+} from '../validators/postsValidators';
 
 class PostsController {
   async create(req: Request, res: Response) {
@@ -28,6 +32,16 @@ class PostsController {
       },
       user.id
     );
+
+    res.json({ post });
+  }
+
+  async findOne(req: Request, res: Response) {
+    await findOneValidator.validate(req.params);
+    const { postId } = req.params;
+
+    const readPostUseCase = makeReadPostUseCase();
+    const post = await readPostUseCase.execute(postId);
 
     res.json({ post });
   }

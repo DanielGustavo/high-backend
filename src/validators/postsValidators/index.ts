@@ -1,3 +1,4 @@
 import createValidator from './createValidator';
+import findOneValidator from './findOneValidator';
 
-export { createValidator };
+export { createValidator, findOneValidator };

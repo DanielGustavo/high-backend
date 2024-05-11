@@ -6,6 +6,8 @@ import ensureAuthorizationMiddleware from '../middlewares/ensureAuthorizationMid
 
 const router = Router();
 
+router.get('/posts/:postId', postsController.findOne);
+
 router.use(ensureAuthorizationMiddleware);
 router.post('/posts', postsController.create);
 
