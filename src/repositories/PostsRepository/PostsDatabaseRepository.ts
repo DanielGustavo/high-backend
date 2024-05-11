@@ -93,6 +93,44 @@ export default class PostsDatabaseRepository implements TPostsRepository {
 
     return post;
   }
+
+  async update(newValue: Post) {
+    const rawSql = `
+      WITH updated AS (
+        UPDATE posts
+        SET
+          title = $2,
+          description = $3,
+          content = $4,
+          thumbnail_filename = $5,
+          user_id = $6,
+          updated_at = $7
+        WHERE id = $1
+        RETURNING ${postsPropertiesSql}
+      )
+      SELECT
+        updated.*,
+        JSON_BUILD_OBJECT(${usersPropertiesSql}) as user
+      FROM updated LEFT JOIN users ON users.id = $6;
+    `;
+
+    const queryVariables = [
+      newValue.id,
+      newValue.title,
+      newValue.description,
+      newValue.content,
+      newValue.thumbnail_filename,
+      newValue.user?.id,
+      new Date(),
+    ];
+
+    const { rows } = await this.databaseHelper.query(rawSql, queryVariables);
+    await this.databaseHelper.end();
+
+    const post = rows[0] as Post;
+
+    return post;
+  }
 }
 
 const postsPropertiesSql = `

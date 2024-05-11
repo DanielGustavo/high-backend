@@ -6,6 +6,7 @@ export type TPostsRepository = {
   create: (postData: TCreatePost) => Promise<Post>;
   findById: (id: string) => Promise<Post | undefined>;
   deleteById: (id: string) => Promise<Post | undefined>;
+  update: (newValue: Post) => Promise<Post>;
 };
 
 export type TCreatePost = {
