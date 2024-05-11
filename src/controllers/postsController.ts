@@ -12,7 +12,11 @@ import {
   createValidator,
   deleteValidator,
   findOneValidator,
+  updateValidator,
 } from '../validators/postsValidators';
+import { makeUpdatePostUseCase } from '../usecases/factories/updatePostUseCase';
+
+const tokenHelper = makeJWTHelper();
 
 class PostsController {
   async create(req: Request, res: Response) {
@@ -20,7 +24,6 @@ class PostsController {
 
     const { title, content, description } = req.body;
 
-    const tokenHelper = makeJWTHelper();
     const createPostsUseCase = makeCreatePostUseCase();
 
     const authToken = req.headers.authorization as string;
@@ -52,13 +55,31 @@ class PostsController {
     await deleteValidator.validate(req.params);
     const { postId } = req.params;
 
-    const tokenHelper = makeJWTHelper();
-
     const authToken = req.headers.authorization as string;
     const user = tokenHelper.decode<TTokenPayload>(authToken, true);
 
     const deletePostUseCase = makeDeletePostUseCase();
     const post = await deletePostUseCase.execute({ postId, userId: user.id });
+
+    res.json({ post });
+  }
+
+  async update(req: Request, res: Response) {
+    await updateValidator.validate(req.params, req.body);
+
+    const { postId } = req.params;
+    const { title, description, content } = req.body;
+
+    const authToken = req.headers.authorization as string;
+    const user = tokenHelper.decode<TTokenPayload>(authToken, true);
+
+    const updatePostUseCase = makeUpdatePostUseCase();
+    const post = await updatePostUseCase.execute(user.id, {
+      id: postId,
+      title,
+      description,
+      content,
+    });
 
     res.json({ post });
   }

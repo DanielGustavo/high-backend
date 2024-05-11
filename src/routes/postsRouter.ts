@@ -12,5 +12,6 @@ router.use(ensureAuthorizationMiddleware);
 
 router.post('/posts', postsController.create);
 router.delete('/posts/:postId', postsController.delete);
+router.put('/posts/:postId', postsController.update);
 
 export default router;
