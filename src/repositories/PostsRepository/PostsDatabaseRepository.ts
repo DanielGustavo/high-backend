@@ -61,4 +61,37 @@ export default class PostsDatabaseRepository implements TPostsRepository {
 
     return rows[0] as Post;
   }
+
+  async findById(id: string) {
+    const rawSql = `
+      SELECT
+        posts.id,
+        posts.title,
+        posts.description,
+        posts.content,
+        posts.thumbnail_filename as "thumbnailFilename",
+        posts.created_at as "createdAt",
+        posts.updated_at as "updatedAt",
+        posts.deleted_at as "deletedAt",
+        JSON_BUILD_OBJECT(
+          'id', users.id,
+          'name', users.name,
+          'email', users.email,
+          'avatarFilename', users.avatar_filename,
+          'createdAt', users.created_at,
+          'updatedAt', users.updated_at
+        ) as user
+      FROM posts
+      LEFT JOIN users ON users.id = posts.user_id
+      WHERE posts.id = $1
+      LIMIT 1
+    `;
+
+    const queryVariables = [id];
+
+    const { rows } = await this.databaseHelper.query(rawSql, queryVariables);
+    const post = rows[0];
+
+    return post as Post | undefined;
+  }
 }
