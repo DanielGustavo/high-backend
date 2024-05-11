@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import AppError from '../shared/errors/AppError';
 
-import JWTHelper from '../helpers/TokenHelper/JWTHelper';
+import { makeJWTHelper } from '../helpers/factories/TokenHelper';
 
 export default function ensureAuthorizationMiddleware(
   request: Request,
@@ -21,7 +21,8 @@ export default function ensureAuthorizationMiddleware(
     throw new AppError(401, 'Invalid token');
   }
 
-  const tokenIsValid = new JWTHelper().validate(token);
+  const tokenHelper = makeJWTHelper();
+  const tokenIsValid = tokenHelper.validate(token);
 
   if (tokenIsValid) {
     next();
