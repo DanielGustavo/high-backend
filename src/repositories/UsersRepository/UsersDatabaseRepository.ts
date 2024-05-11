@@ -1,6 +1,6 @@
-import { TCreateUser, TUsersRepository } from './TUsersRepository';
-
 import User from '../../entities/User';
+
+import { TCreateUser, TUsersRepository } from './TUsersRepository';
 
 import { TDatabaseHelper } from '../../helpers/DatabaseHelper/TDatabaseHelper';
 
@@ -28,10 +28,7 @@ export default class UsersDatabaseRepository implements TUsersRepository {
 
     const queryVariables = [email];
 
-    const { rows } = await this.databaseHelper.query<User>(
-      rawSql,
-      queryVariables
-    );
+    const { rows } = await this.databaseHelper.query(rawSql, queryVariables);
 
     await this.databaseHelper.end();
 
@@ -39,7 +36,7 @@ export default class UsersDatabaseRepository implements TUsersRepository {
       return undefined;
     }
 
-    return rows[0];
+    return rows[0] as User;
   }
 
   async create(userData: TCreateUser) {
@@ -68,12 +65,9 @@ export default class UsersDatabaseRepository implements TUsersRepository {
       currentTimestamp,
     ];
 
-    const { rows } = await this.databaseHelper.query<User>(
-      rawSql,
-      queryVariables
-    );
+    const { rows } = await this.databaseHelper.query(rawSql, queryVariables);
     await this.databaseHelper.end();
 
-    return rows[0];
+    return rows[0] as User;
   }
 }
