@@ -5,6 +5,7 @@ import { TDatabaseHelper } from '../../helpers/DatabaseHelper/TDatabaseHelper';
 export type TPostsRepository = {
   create: (postData: TCreatePost) => Promise<Post>;
   findById: (id: string) => Promise<Post | undefined>;
+  deleteById: (id: string) => Promise<Post | undefined>;
 };
 
 export type TCreatePost = {
