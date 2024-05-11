@@ -7,7 +7,7 @@ import { TTokenHelper } from '../../helpers/TokenHelper/TTokenHelper';
 
 import EmailOrPasswordAreInvalid from '../errors/EmailOrPasswordAreInvalid';
 
-import User from '../../entities/User';
+import { TTokenPayload } from '../../shared/types/TTokenPayload';
 
 export default class AuthenticateUserUseCase {
   constructor(props: TConstructor) {
@@ -34,7 +34,7 @@ export default class AuthenticateUserUseCase {
 
     if (!passwordIsCorrect) throw EmailOrPasswordAreInvalid;
 
-    const userData: Partial<User> = {
+    const tokenPayload: TTokenPayload = {
       id: user.id,
       name: user.name,
       email: user.email,
@@ -43,7 +43,7 @@ export default class AuthenticateUserUseCase {
       updatedAt: user.updatedAt,
     };
 
-    const token = this.tokenHelper.generateToken(userData);
+    const token = this.tokenHelper.generateToken(tokenPayload);
 
     return token;
   }
