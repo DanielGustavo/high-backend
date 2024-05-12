@@ -7,6 +7,7 @@ import ensureAuthorizationMiddleware from '../middlewares/ensureAuthorizationMid
 const router = Router();
 
 router.get('/posts/:postId', postsController.findOne);
+router.get('/posts', postsController.list);
 
 router.use(ensureAuthorizationMiddleware);
 

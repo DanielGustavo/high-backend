@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { makeCreatePostUseCase } from '../usecases/factories/createPostUseCase';
 import { makeReadPostUseCase } from '../usecases/factories/readPostUseCase';
 import { makeDeletePostUseCase } from '../usecases/factories/deletePostUseCase';
+import { makeUpdatePostUseCase } from '../usecases/factories/updatePostUseCase';
+import { makeListPostsUseCase } from '../usecases/factories/listPostsUseCase';
 
 import { makeJWTHelper } from '../helpers/factories/TokenHelper';
 
@@ -12,9 +14,9 @@ import {
   createValidator,
   deleteValidator,
   findOneValidator,
+  listValidator,
   updateValidator,
 } from '../validators/postsValidators';
-import { makeUpdatePostUseCase } from '../usecases/factories/updatePostUseCase';
 
 const tokenHelper = makeJWTHelper();
 
@@ -49,6 +51,20 @@ class PostsController {
     const post = await readPostUseCase.execute(postId);
 
     res.json({ post });
+  }
+
+  async list(req: Request, res: Response) {
+    await listValidator.validate(req.query);
+    const { search, page, items } = req.query;
+
+    const listPostsUseCase = makeListPostsUseCase();
+    const { posts, totalLength } = await listPostsUseCase.execute({
+      search: String(search ?? ''),
+      page: Number(page),
+      items: Number(items ?? 15),
+    });
+
+    res.json({ posts, totalLength });
   }
 
   async delete(req: Request, res: Response) {

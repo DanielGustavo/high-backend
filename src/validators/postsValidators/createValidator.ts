@@ -7,7 +7,7 @@ class CreateValidator {
     const schema = yup.object().shape({
       title: yup.string().min(5).max(100),
       description: yup.string().optional().max(300),
-      content: yup.string().min(5).max(10000),
+      content: yup.string().min(5).max(100000),
     });
 
     await schema.validate(body).catch(({ errors }: yup.ValidationError) => {
