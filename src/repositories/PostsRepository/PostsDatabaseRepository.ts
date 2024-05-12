@@ -5,6 +5,7 @@ import { TDatabaseHelper } from '../../helpers/DatabaseHelper/TDatabaseHelper';
 import {
   TConstructor,
   TCreatePost,
+  TPagination,
   TPostsRepository,
 } from './TPostsRepository';
 
@@ -66,6 +67,79 @@ export default class PostsDatabaseRepository implements TPostsRepository {
     const post = rows[0];
 
     return post as Post | undefined;
+  }
+
+  async search(search: string, pagination: TPagination) {
+    const rawSql = `
+      WITH filtered AS (
+        SELECT
+          posts.*,
+          JSON_BUILD_OBJECT(${usersPropertiesSql}) as user
+        FROM posts
+        LEFT JOIN users ON users.id = posts.user_id
+        WHERE
+          (
+            posts.title ILIKE $1 OR
+            posts.description ILIKE $1 OR
+            posts.content ILIKE $1 OR
+            users.name ILIKE $1
+          ) AND
+          (
+            posts.deleted_at IS NULL AND
+            posts.user_id IS NOT NULL
+          )
+        LIMIT $2 OFFSET $3
+      )
+      SELECT ${postsPropertiesSql}, posts.user FROM filtered posts
+    `;
+
+    const queryVariables = [
+      `%${search}%`,
+      pagination.items,
+      pagination.items * (pagination.page - 1),
+    ];
+
+    const { rows } = await this.databaseHelper.query<Post>(
+      rawSql,
+      queryVariables
+    );
+    await this.databaseHelper.end();
+
+    return rows;
+  }
+
+  async countAll(search?: string) {
+    const rawSql = `
+      WITH filtered AS (
+        SELECT
+          ${postsPropertiesSql}, posts.user_id,
+          JSON_BUILD_OBJECT(${usersPropertiesSql}) as user
+        FROM posts
+        LEFT JOIN users ON users.id = posts.user_id
+        WHERE
+          (
+            posts.title ILIKE $1 OR
+            posts.description ILIKE $1 OR
+            posts.content ILIKE $1 OR
+            users.name ILIKE $1
+          ) AND
+          (
+            posts.deleted_at IS NULL AND
+            posts.user_id IS NOT NULL
+          )
+      )
+      SELECT COUNT(filtered.*) as count FROM filtered;
+    `;
+
+    const queryVariables = [`%${search ?? ''}%`];
+
+    const { rows } = await this.databaseHelper.query<{ count: string }>(
+      rawSql,
+      queryVariables
+    );
+    await this.databaseHelper.end();
+
+    return Number(rows[0].count);
   }
 
   async deleteById(id: string) {
