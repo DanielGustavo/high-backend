@@ -2,6 +2,7 @@ import 'express-async-errors';
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
+import path from 'path';
 
 import handleAppErrorThrowMiddleware from './middlewares/handleAppErrorThrowMiddleware';
 import routes from './routes';
@@ -10,6 +11,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({ origin: '*' }));
+app.use(
+  '/uploads',
+  express.static(path.resolve(__dirname, '..', 'static', 'uploads'))
+);
 app.use(routes);
 app.use(handleAppErrorThrowMiddleware);
 

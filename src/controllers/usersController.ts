@@ -2,11 +2,17 @@ import { Request, Response } from 'express';
 
 import { makeRegisterUserUseCase } from '../usecases/factories/registerUserUseCase';
 import { makeAuthenticateUserUseCase } from '../usecases/factories/authenticateUserUseCase';
+import { makeChangeUserAvatarUseCase } from '../usecases/factories/changeUserAvatarUseCase';
 
 import {
   authenticateValidator,
   registerValidator,
 } from '../validators/usersValidators';
+
+import { makeJWTHelper } from '../helpers/factories/TokenHelper';
+import { TTokenPayload } from '../shared/types/TTokenPayload';
+
+const tokenHelper = makeJWTHelper();
 
 class UsersController {
   async register(req: Request, res: Response) {
@@ -33,6 +39,20 @@ class UsersController {
     const token = await authenticateUserUseCase.execute({ email, password });
 
     res.json({ token });
+  }
+
+  async changeAvatar(req: Request, res: Response) {
+    const authToken = req.headers.authorization as string;
+    const user = tokenHelper.decode<TTokenPayload>(authToken, true);
+
+    const changeUserAvatarUseCase = makeChangeUserAvatarUseCase();
+
+    const newUserState = await changeUserAvatarUseCase.execute({
+      userId: user.id,
+      filename: req.file?.filename as string,
+    });
+
+    res.json({ user: newUserState });
   }
 }
 

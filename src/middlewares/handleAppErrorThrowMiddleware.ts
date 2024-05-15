@@ -4,7 +4,7 @@ import AppError from '../shared/errors/AppError';
 
 export default function handleAppErrorThrowMiddleware(
   error: ErrorRequestHandler,
-  request: Request,
+  __: Request,
   response: Response,
   _: NextFunction
 ) {

@@ -7,7 +7,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 const myRules = {
   '@typescript-eslint/no-var-requires': 'off',
-  '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_$' }],
+  '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
 };
 
 export default [
