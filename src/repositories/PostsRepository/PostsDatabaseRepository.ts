@@ -193,7 +193,7 @@ export default class PostsDatabaseRepository implements TPostsRepository {
       newValue.title,
       newValue.description,
       newValue.content,
-      newValue.thumbnail_filename,
+      newValue.thumbnailFilename,
       newValue.user?.id,
       new Date(),
     ];

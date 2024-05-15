@@ -5,7 +5,7 @@ export default interface Post {
   title: string;
   description?: string;
   content: string;
-  thumbnail_filename?: string;
+  thumbnailFilename?: string;
   user?: User;
   createdAt: Date;
   updatedAt: Date;

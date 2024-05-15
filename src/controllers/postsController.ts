@@ -5,12 +5,14 @@ import { makeReadPostUseCase } from '../usecases/factories/readPostUseCase';
 import { makeDeletePostUseCase } from '../usecases/factories/deletePostUseCase';
 import { makeUpdatePostUseCase } from '../usecases/factories/updatePostUseCase';
 import { makeListPostsUseCase } from '../usecases/factories/listPostsUseCase';
+import { makeChangePostThumbnailUseCase } from '../usecases/factories/changePostThumbnailUseCase';
 
 import { makeJWTHelper } from '../helpers/factories/TokenHelper';
 
 import { TTokenPayload } from '../shared/types/TTokenPayload';
 
 import {
+  changeThumbnailValidator,
   createValidator,
   deleteValidator,
   findOneValidator,
@@ -95,6 +97,23 @@ class PostsController {
       title,
       description,
       content,
+    });
+
+    res.json({ post });
+  }
+
+  async changeThumbnail(req: Request, res: Response) {
+    await changeThumbnailValidator.validate(req.params);
+    const { postId } = req.params;
+
+    const authToken = req.headers.authorization as string;
+    const user = tokenHelper.decode<TTokenPayload>(authToken, true);
+
+    const changePostThumbnailUseCase = makeChangePostThumbnailUseCase();
+    const post = await changePostThumbnailUseCase.execute({
+      postId,
+      userId: user.id,
+      filename: req.file?.filename as string,
     });
 
     res.json({ post });
