@@ -15,8 +15,14 @@ export default class JWTHelper implements TTokenHelper {
     return jsonwebtoken.sign(data, this.secret, this.options);
   }
 
-  decode<T = unknown>(token: string) {
-    return jsonwebtoken.verify(token, this.secret) as T;
+  decode<T = unknown>(token: string, hasBearer = false) {
+    let finalToken = token;
+
+    if (hasBearer) {
+      finalToken = finalToken.split('Bearer ')[1];
+    }
+
+    return jsonwebtoken.verify(finalToken, this.secret) as T;
   }
 
   validate(token: string) {

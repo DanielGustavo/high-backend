@@ -1,7 +1,7 @@
 import { Request, Router } from 'express';
 import multer from 'multer';
 
-import usersController from '../controllers/usersController';
+import postsController from '../controllers/postsController';
 
 import ensureAuthorizationMiddleware from '../middlewares/ensureAuthorizationMiddleware';
 
@@ -10,11 +10,24 @@ import AppError from '../shared/errors/AppError';
 
 const router = Router();
 
-router.post('/signup', usersController.register);
-router.post('/signin', usersController.authenticate);
+router.get('/posts/:postId', postsController.findOne);
+router.get('/posts', postsController.list);
+
+router.post('/posts', ensureAuthorizationMiddleware, postsController.create);
+
+router.delete(
+  '/posts/:postId',
+  ensureAuthorizationMiddleware,
+  postsController.delete
+);
 
 router.put(
-  '/avatar',
+  '/posts/:postId',
+  ensureAuthorizationMiddleware,
+  postsController.update
+);
+router.put(
+  '/posts/:postId/thumbnail',
   ensureAuthorizationMiddleware,
   multer({
     storage: storage,
@@ -30,10 +43,12 @@ router.put(
         return;
       }
 
-      cb(new AppError(400, 'Avatar must be an image: jpg, jpeg or png') as any);
+      cb(
+        new AppError(400, 'Thumbnail must be an image: jpg, jpeg or png') as any
+      );
     },
-  }).single('avatar'),
-  usersController.changeAvatar
+  }).single('thumbnail'),
+  postsController.changeThumbnail
 );
 
 export default router;

@@ -26,11 +26,15 @@ export default class RegisterUserUseCase {
 
     const passwordHash = await this.hashHelper.hash(userData.password, 7);
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name: userData.name,
       email: userData.email,
       password: passwordHash,
       avatarFilename: userData.avatarFilename,
     });
+
+    Object.assign(user, { password: undefined });
+
+    return user;
   }
 }
