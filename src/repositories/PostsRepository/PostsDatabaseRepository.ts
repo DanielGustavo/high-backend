@@ -88,15 +88,18 @@ export default class PostsDatabaseRepository implements TPostsRepository {
             posts.deleted_at IS NULL AND
             posts.user_id IS NOT NULL
           )
+        ORDER BY posts.created_at DESC
         LIMIT $2 OFFSET $3
       )
       SELECT ${postsPropertiesSql}, posts.user FROM filtered posts
     `;
 
+    const page = pagination.page - 1;
+
     const queryVariables = [
       `%${search}%`,
       pagination.items,
-      pagination.items * (pagination.page - 1),
+      pagination.items * page + (page === 0 ? 0 : 1),
     ];
 
     const { rows } = await this.databaseHelper.query<Post>(
