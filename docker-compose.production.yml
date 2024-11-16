@@ -20,5 +20,6 @@ services:
       - ./:/high
     ports:
       - ${APP_PORT}:${APP_PORT}
+      - ${SOCKET_PORT}:${SOCKET_PORT}
     depends_on:
       - db
